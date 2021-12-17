@@ -131,5 +131,11 @@ func (u *ConnectionURI) dialTLS() (net.Conn, error) {
 		return nil, err
 	}
 
-	return tls.Dial("tcp", fmt.Sprintf("%s:%s", u.Hostname(), port), tlsConfig)
+	conn, err := tls.Dial("tcp", fmt.Sprintf("%s:%s", u.Hostname(), port), tlsConfig)
+	if err != nil {
+		return nil, err
+	}
+	// https://github.com/digitalocean/go-libvirt/issues/89#issuecomment-755321970
+	conn.Read(make([]byte, 1))
+	return conn, nil
 }
