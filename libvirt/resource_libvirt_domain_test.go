@@ -609,6 +609,7 @@ func TestAccLibvirtDomain_NetworkInterface(t *testing.T) {
 			hostname       = "myhost"
 			mac            = "52:54:00:A9:F5:17"
 			wait_for_lease = true
+			mtu            = 1440
 		}
 		network_interface  {
 			network_id = "${libvirt_network.%s.id}"
@@ -637,6 +638,8 @@ func TestAccLibvirtDomain_NetworkInterface(t *testing.T) {
 						"libvirt_domain."+randomDomainName, "network_interface.0.mac", "52:54:00:A9:F5:17"),
 					resource.TestCheckResourceAttr(
 						"libvirt_domain."+randomDomainName, "network_interface.0.hostname", "myhost"),
+					resource.TestCheckResourceAttr(
+						"libvirt_domain."+randomDomainName, "network_interface.0.mtu", "1440"),
 					resource.TestCheckResourceAttr(
 						"libvirt_domain."+randomDomainName, "network_interface.1.network_name", randomNetworkName),
 					resource.TestCheckResourceAttr(

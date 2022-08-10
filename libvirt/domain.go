@@ -739,6 +739,12 @@ func setNetworkInterfaces(d *schema.ResourceData, domainDef *libvirtxml.Domain,
 			log.Printf("[WARN] no network has been specified")
 		}
 
+		if mtu, ok := d.GetOk(prefix + ".mtu"); ok {
+			netIface.MTU = &libvirtxml.DomainInterfaceMTU{
+				Size: uint(mtu.(int)),
+			}
+		}
+
 		if network.Name != "" {
 			networkDef, err := getXMLNetworkDefFromLibvirt(virConn, network)
 

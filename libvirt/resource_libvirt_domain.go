@@ -11,9 +11,10 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	libvirt "github.com/digitalocean/go-libvirt"
-	"github.com/dmacvicar/terraform-provider-libvirt/libvirt/helper/suppress"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"libvirt.org/go/libvirtxml"
+
+	"github.com/dmacvicar/terraform-provider-libvirt/libvirt/helper/suppress"
 )
 
 type pendingMapping struct {
@@ -230,6 +231,11 @@ func resourceLibvirtDomain() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+						},
+						"mtu": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Computed: true,
 						},
 					},
 				},
@@ -749,7 +755,6 @@ func resourceLibvirtDomainUpdate(d *schema.ResourceData, meta interface{}) error
 			if !ok {
 				continue
 			}
-
 			uuid := parseUUID(networkUUID.(string))
 
 			network, err := virConn.NetworkLookupByUUID(uuid)
@@ -964,6 +969,7 @@ func resourceLibvirtDomainRead(d *schema.ResourceData, meta interface{}) error {
 			"mac":            mac,
 			"hostname":       "",
 			"wait_for_lease": false,
+			"mtu":            networkInterfaceDef.MTU,
 		}
 
 		netIface["wait_for_lease"] = d.Get(prefix + ".wait_for_lease").(bool)
